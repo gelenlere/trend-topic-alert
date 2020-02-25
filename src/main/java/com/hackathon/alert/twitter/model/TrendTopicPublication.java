@@ -17,6 +17,6 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrendTopicPublication {
-    Map<String, List<String>> publicationsForTT;
+    Map<String, String[]> publicationsForTT;
 
 }

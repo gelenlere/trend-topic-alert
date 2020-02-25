@@ -23,7 +23,7 @@ public class MailSender {
 
     private static final String EMAIL_SUBJECT = "Trend topics for you";
 
-    public static void sendMail(Map<String, List<String>> publicationsForTT) {
+    public static void sendMail(Map<String, String[]> publicationsForTT) {
 
         Properties prop = System.getProperties();
         prop.put("mail.smtp.host", SMTP_SERVER); //optional, defined in SMTPTransport
@@ -75,15 +75,17 @@ public class MailSender {
 
     }
 
-    private static String generateEmailBody(Map<String, List<String>> publicationsForTT) {
+    private static String generateEmailBody(Map<String, String[]> publicationsForTT) {
         String emailText = "Dear researcher, \r\n";
         emailText += "Here are some publications for you for trending topics \r\n";
         String publicationLinks = "";
-        for (Map.Entry<String,List<String>> entry : publicationsForTT.entrySet()){
-            publicationLinks +=  entry.getKey() + " looks like trending right now. Here are publications with this topic: \r\n";
+        for (Map.Entry<String,String[]> entry : publicationsForTT.entrySet()){
+            publicationLinks +=  "\"" + entry.getKey() + "\" looks like trending right now. Here are publications with this topic: \r\n";
             String links = "";
-            for(Iterator i = entry.getValue().iterator();i.hasNext();){
-                links += i.next().toString();
+            String[] linkValues = entry.getValue();
+            for(int i=0 ; i<linkValues.length; i++){
+                links += linkValues[i];
+                links += "\r\n";
             }
             publicationLinks += links;
         }
