@@ -76,7 +76,7 @@ public class TweetService {
     private String urlString(String trend) {
         StringBuilder sb = new StringBuilder(TWEETS_URL);
         String queryParam = joinerEqual.join("q", trend);
-        String maxParam = joinerEqual.join("count", "1");
+        String maxParam = joinerEqual.join("count", "10");
         String urlParameters = joinerAnd.join(queryParam, maxParam);
         sb.append(urlParameters);
         return sb.toString();
