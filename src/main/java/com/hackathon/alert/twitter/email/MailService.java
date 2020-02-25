@@ -1,7 +1,10 @@
 package com.hackathon.alert.twitter.email;
 
 
+import com.hackathon.alert.twitter.model.Article;
+import com.hackathon.alert.twitter.model.EmailData;
 import com.sun.mail.smtp.SMTPTransport;
+import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -10,8 +13,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
 
-
-public class MailSender {
+@Service
+public class MailService {
 
     private static final String SMTP_SERVER = "localhost";
     private static final String USERNAME = "";
@@ -23,7 +26,7 @@ public class MailSender {
 
     private static final String EMAIL_SUBJECT = "Trend topics for you";
 
-    public static void sendMail(Map<String, String[]> publicationsForTT) {
+    public void sendMail(List<EmailData> emailData) {
 
         Properties prop = System.getProperties();
         prop.put("mail.smtp.host", SMTP_SERVER); //optional, defined in SMTPTransport
@@ -50,8 +53,7 @@ public class MailSender {
             msg.setSubject(EMAIL_SUBJECT);
 
 
-
-            msg.setText(generateEmailBody(publicationsForTT));
+            msg.setText(generateEmailBody(emailData));
 
             msg.setSentDate(new Date());
 
@@ -75,22 +77,17 @@ public class MailSender {
 
     }
 
-    private static String generateEmailBody(Map<String, String[]> publicationsForTT) {
+    private String generateEmailBody(List<EmailData> emailData) {
         String emailText = "Dear researcher, \r\n";
-        emailText += "Here are some publications for you for trending topics \r\n";
+        emailText += "Here are some publications for you for trending topics \r\n\n";
         String publicationLinks = "";
-        for (Map.Entry<String,String[]> entry : publicationsForTT.entrySet()){
-            publicationLinks +=  "\"" + entry.getKey() + "\" looks like trending right now. Here are publications with this topic: \r\n";
-            String links = "";
-            String[] linkValues = entry.getValue();
-            for(int i=0 ; i<linkValues.length; i++){
-                links += linkValues[i];
-                links += "\r\n";
-            }
-            publicationLinks += links;
+        for (EmailData e : emailData) {
+            emailText += "Trend:  " + e.getTrend() + "\n\n";
+            emailText += "Articles:  " + e.getTrend() + "\n\n";
+            Article a = e.getArticle();
+            emailText += "Article:  " + a.getTitle() + "-->" + a.getLink() + "\n";
+            emailText += "\n\n";
         }
-        emailText += publicationLinks;
-
-        return  emailText;
+        return emailText;
     }
 }

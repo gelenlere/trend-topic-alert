@@ -1,5 +1,7 @@
 package com.hackathon.alert.twitter;
 
+import com.hackathon.alert.twitter.model.Article;
+import com.hackathon.alert.twitter.model.EmailData;
 import com.hackathon.alert.twitter.model.Trend;
 import com.hackathon.alert.twitter.model.Tweets;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,20 @@ public class Converter {
         List<String> tweets = entry.getValue().getStatuses().stream().map(s -> s.getText()).collect(Collectors.toList());
         result.setTweets(tweets);
         return result;
+    }
+
+    public List<EmailData> convert(List<Scopus> scopuses){
+        return scopuses.stream().map(s -> convert(s)).collect(Collectors.toList());
+    }
+
+    private EmailData convert(Scopus s){
+        EmailData e = new EmailData();
+        e.setTrend(s.getTrendingTopic());
+        Article a = new Article();
+        a.setTitle(s.getPublicationTitle());
+        a.setLink(s.getScopusLink());
+        e.setArticle(a);
+        return e;
     }
 
 }
