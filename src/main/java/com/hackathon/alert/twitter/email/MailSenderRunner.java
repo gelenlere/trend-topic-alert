@@ -6,6 +6,6 @@ public class MailSenderRunner {
 
     public static void main(String[] args) {
 
-        MailSender.sendMail();
+//        MailSender.sendMail(trendTopicPublication.getPublicationsForTT());
     }
 }

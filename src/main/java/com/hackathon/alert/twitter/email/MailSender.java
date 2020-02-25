@@ -8,8 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 
 public class MailSender {
@@ -24,7 +23,7 @@ public class MailSender {
 
     private static final String EMAIL_SUBJECT = "Trend topics for you";
 
-    public static void sendMail() {
+    public static void sendMail(Map<String, List<String>> publicationsForTT) {
 
         Properties prop = System.getProperties();
         prop.put("mail.smtp.host", SMTP_SERVER); //optional, defined in SMTPTransport
@@ -52,7 +51,7 @@ public class MailSender {
 
 
 
-            msg.setText(generateEmailBody());
+            msg.setText(generateEmailBody(publicationsForTT));
 
             msg.setSentDate(new Date());
 
@@ -76,13 +75,20 @@ public class MailSender {
 
     }
 
-    private static String generateEmailBody() {
+    private static String generateEmailBody(Map<String, List<String>> publicationsForTT) {
         String emailText = "Dear researcher, \r\n";
-        String trendTopic = "";
-        // content
-        emailText = emailText + trendTopic + " looks like trending right now. Here are some publications for you: \r\n";
-        String publications = "";
-        emailText += publications;
+        emailText += "Here are some publications for you for trending topics \r\n";
+        String publicationLinks = "";
+        for (Map.Entry<String,List<String>> entry : publicationsForTT.entrySet()){
+            publicationLinks +=  entry.getKey() + " looks like trending right now. Here are publications with this topic: \r\n";
+            String links = "";
+            for(Iterator i = entry.getValue().iterator();i.hasNext();){
+                links += i.next().toString();
+            }
+            publicationLinks += links;
+        }
+        emailText += publicationLinks;
+
         return  emailText;
     }
 }
